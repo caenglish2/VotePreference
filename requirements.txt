@@ -1,0 +1,10 @@
+gunicorn
+pandas
+bokeh==0.13.0
+flask
+jinja2
+pip
+simplejson
+sklearn
+numpy
+scipy

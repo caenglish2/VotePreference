@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="//cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.css" type="text/css" />
+    <script type="text/javascript" src="//cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.js"></script>
+    {{ script | safe }}
+  </head>
+  <body>
+    <div class=page>
+      <h1>Predicted Outcomes by County</h1>
+      {{ div | safe }}
+    </div>
+    {{ script_cor | safe }}
+  </head>
+  <body>
+    <div class=page>
+      <h1>Factors Correlated with Outcome</h1>
+      {{ div_cor | safe }}
+    </div>
+  </body>
+    <div class=page>
+      <h1>Model Information</h1>
+      <h3>R^2 = {{GLM_R2}}</h3>
+      <h3>Based on: {{ N }} data points</h3>
+    </div>
+  </body>
+</html>

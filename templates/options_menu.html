@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Predict outcomes of ballot initiatives using machine learning.">
+    <meta name="author" content="@caenglish2">    
+    <style>
+    body {
+      padding-top: 70px;
+    }
+    </style>
+  </head>
+    <!-- <link rel="icon" href="favicon.ico"> -->
+
+    <title>Vote Preference</title>
+
+  <body>
+    <!-- navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-1">
+          <span class="sr-only">Toggle navigation</span>
+          </button>
+          <span class="navbar-brand">Vote Preference App</span>
+        </div>
+
+        <div class="collapse navbar-collapse" id="nav-1">
+          <ul class="nav navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/caenglish2/BallotInitiativeDI">GitHub</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/caenglish2/VotePreference/blob/master/VotePreferenceAbout.pdf">About</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-left">
+          <h4>Select ballot question purpose</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 text-left">
+	  <form name='issue' id='input' method='post' action='graph'>
+          <select name='dropdown'>
+  		<option value="increase_sales_tax">Increase Sales Tax</option>
+  		<option value="increase_tobacco_tax">Increase Tobacco Tax</option>
+  		<option value="expand_slot_machine_gaming">Expand Casino Gaming</option>
+  		<option value="issue_bonds">Bond Issue</option>
+  		<option value="fund_parks">Increase Park Funding</option>
+  		<option value="legalize_medical_marijuana">Legalize Medical Marijuana</option>
+  		<option value="legalize_marijuana">Legalize Marijuana (Recreational Use)</option>
+  		<option value="legalize_assisted_euthanasia">Legalize Physician-Assisted Euthanasia</option>
+		<option value="no_public_funds_for_abortion">Ban Public Funding For Abortions</option>
+		<option value="public_funds_for_religious_orgs">Allow Public Funding For Religious Orgs</option>
+  		<option value="right_to_work">Implement "Right to Work"</option>  			<option value="unions_secret_ballot">Require Secret Ballots for Unionization Votes</option>
+  		<option value="increase_minimum_wage">Increase Minimum Wage</option>
+  		<option value="no_mandatory_healthcare">Prohibit Mandatory Health Insurance</option>
+  		<option value="voter_id_law">Voter ID Law</option>
+
+
+
+	 </select>
+          <h4>Where does the vote take place?</h4>
+          <p>State Two Letter Code: <input type='text' name='state' placeholder='NY' /></p>
+            <p><input type="submit" value="Submit"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
+</html>
