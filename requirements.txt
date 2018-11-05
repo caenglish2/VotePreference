@@ -8,3 +8,4 @@ simplejson
 sklearn
 numpy
 scipy
+bokeh.sampledata
