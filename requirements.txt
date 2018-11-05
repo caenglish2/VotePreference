@@ -1,6 +1,6 @@
 gunicorn
 pandas
-bokeh==0.13.0
+bokeh
 flask
 jinja2
 pip
