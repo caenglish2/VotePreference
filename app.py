@@ -15,7 +15,6 @@ from bokeh.io import show, output_file
 from bokeh.models import LogColorMapper
 from bokeh.models import LinearColorMapper
 from bokeh.palettes import Spectral6 as palette
-#from bokeh.palettes import Viridis6 as palette
 from bokeh.plotting import figure
 import math
 import numpy as np
@@ -29,7 +28,6 @@ from sklearn.linear_model import LogisticRegression
 import heapq
 from bokeh.models import LogColorMapper, LogTicker, ColorBar
 palette=['#ff0000','#ff1a1a','#ff3333','#ff4d4d','#ff6666','#ff8080','#ff9999','#ffb3b3','#ffcccc','#ffe6e6','#bfbfbf','#e6e6ff','#ccccff','#b3b3ff','#9999ff','#8080ff','#6666ff','#4d4dff','#3333ff','#1a1aff','#0000ff']
-from bokeh.sampledata.unemployment import data as unemployment
 
 app = Flask(__name__)
 
