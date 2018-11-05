@@ -29,6 +29,7 @@ import heapq
 from bokeh.models import LogColorMapper, LogTicker, ColorBar
 palette=['#ff0000','#ff1a1a','#ff3333','#ff4d4d','#ff6666','#ff8080','#ff9999','#ffb3b3','#ffcccc','#ffe6e6','#bfbfbf','#e6e6ff','#ccccff','#b3b3ff','#9999ff','#8080ff','#6666ff','#4d4dff','#3333ff','#1a1aff','#0000ff']
 
+bokeh.sampledata.download()
 from bokeh.sampledata.us_counties import data as counties
 
 app = Flask(__name__)
