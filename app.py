@@ -31,6 +31,7 @@ palette=['#ff0000','#ff1a1a','#ff3333','#ff4d4d','#ff6666','#ff8080','#ff9999','
 
 app = Flask(__name__)
 
+#This is the code that makes the state map
 def plot(location, predictions,state_name, state_id):
 	import us_counties as counties
 	county_data=counties._read_data()
@@ -56,7 +57,7 @@ def plot(location, predictions,state_name, state_id):
 	script, div = components(p)
 	return script, div
 
-
+#Code for correlation bar plot
 def plot_corr(pcc):
 	factors=['Clinton Margin Over Trump','Per Capita Income','Percent Uninsured','Percent With Some College','Percent African-American','Percent White','Percent Asian','Percent Hispanic','Percent Seniors','Poverty Rate','Income Inequality','Unemployment Rate','Rural Population','Percent Citizens']
 	from bokeh.models import ColumnDataSource
@@ -84,15 +85,17 @@ def plot_corr(pcc):
 	script, div = components(p)
 	return script, div
 
+#Open the menu upon startup
 @app.route('/')
 def index():
   return render_template('options_menu.html')
 
+#Code for displaying prediction results screen
 @app.route('/graph', methods=['POST','GET'])
 def about():
   result = request.form
   issue=result['dropdown']
-  state=result['state']
+  state=result['state'].upper()
   county='Harford'
   pcc, scc, pcc_p, scc_p, GLR_R2, GLR_predict, vict_marg, per_capita_income, uninsured_rate, some_college, N, script, div, script_cor, div_cor=analysis(issue,state,county)
 
@@ -155,7 +158,7 @@ def analysis(issue, state, county):
 	keys=counties.keys()
 	locations=[]
 	state_id_abbr_conv={'AL':1,'AZ':4,'AR':5,'CA':6,'CO':8,'CT':9,'DE':10,'FL':12,'GA':13,'ID':16,'IL':17,'IN':18,'IA':19,'KS':20,'KY':21,'LA':22,'ME':23,'MD':24,'MA':25,'MI':26,'MN':27,'MS':28,'MO':29,'MT':30,'NE':31,'NV':32,'NH':33,'NJ':34,'NM':35,'NY':36,'NC':37,'ND':38,'OH':39,'OK':40,'OR':41,'PA':42,'RI':44,'SC':45,'SD':46,'TN':47,'TX':48,'UT':49,'VT':50,'VA':51,'WV':54,'WY':56,'WI':55,'WA':53}
-	state_id=state_id_abbr_conv[state]
+	state_id=state_id_abbr_conv[state.upper()]
 	for i in keys:
 		if i[0]==state_id:#Need to add 2-AK, 11-DC (no data),15 HI - Maui data
 			name=counties[i]['detailed name'].split(',')
