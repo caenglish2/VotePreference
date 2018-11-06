@@ -144,6 +144,7 @@ def analysis(issue, state, county):
 
 	LLR = Lasso(alpha=0.0005)
 	LLR.fit(data_train, y_train)
+	print(LLR.coef_)
 	LLR_R2=LLR.score(data_train, y_train)
 	CV_LLR = cross_val_score(LLR, data_train, y_train, cv=2)
 
