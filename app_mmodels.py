@@ -35,7 +35,10 @@ app = Flask(__name__)
 
 def plot(location, predictions,state_name):
 	from bokeh.sampledata.us_counties import data as counties
+	#print(counties.keys())
 	counties = {code: county for code, county in counties.items() if county["state"] in [state_name]}
+	print(len(counties))
+	#print(type(counties))
 	county_xs = [county["lons"] for county in counties.values()]
 	county_ys = [county["lats"] for county in counties.values()]
 	county_names = [county['name'] for county in counties.values()]#Make sure names match with data
@@ -186,17 +189,17 @@ def analysis(issue, state, county):
 	#heapq.heappush(h, (np.mean(scoresKNN),'KNN'))
 	heapq.heappush(h, (np.mean(scoresRFR),'RFR'))
 
-	print('GLR:',CV_GLR, np.mean(CV_GLR), GLR_R2, GLR.coef_)
-	print('Ridge: ',CV_LRR, np.mean(CV_LRR), LRR_R2, LRR.coef_)
-	print('Lasso: ',CV_LLR, np.mean(CV_LLR), LLR_R2, LLR.coef_)
-	print('ELN: ',CV_ELN, np.mean(CV_ELN), ELN_R2, ELN.coef_)
-	print('BRR: ',CV_BRR, np.mean(CV_BRR), BRR_R2, BRR.coef_)
-	print('KNN: ', scoresKNN, np.mean(scoresKNN), KNN_R2)
-	print('RFR: ', scoresRFR, np.mean(scoresRFR), RFR.feature_importances_)
+	#print('GLR:',CV_GLR, np.mean(CV_GLR), GLR_R2, GLR.coef_)
+	#print('Ridge: ',CV_LRR, np.mean(CV_LRR), LRR_R2, LRR.coef_)
+	#print('Lasso: ',CV_LLR, np.mean(CV_LLR), LLR_R2, LLR.coef_)
+	#print('ELN: ',CV_ELN, np.mean(CV_ELN), ELN_R2, ELN.coef_)
+	#print('BRR: ',CV_BRR, np.mean(CV_BRR), BRR_R2, BRR.coef_)
+	#print('KNN: ', scoresKNN, np.mean(scoresKNN), KNN_R2)
+	#print('RFR: ', scoresRFR, np.mean(scoresRFR), RFR.feature_importances_)
 
 	best_model=heapq.nlargest(1,h)
 	model_code=best_model[0][1]
-	print(model_code)
+	#print(model_code)
 
 	from bokeh.sampledata.us_counties import data as counties
 	statename_to_abbr = {'District of Columbia': 'DC','Alabama': 'AL','Montana': 'MT','Alaska': 'AK','Nebraska': 'NE','Arizona': 'AZ','Nevada': 'NV','Arkansas': 'AR','NewHampshire': 'NH','California': 'CA','NewJersey': 'NJ','Colorado': 'CO','NewMexico': 'NM','Connecticut': 'CT','NewYork': 'NY','Delaware': 'DE','NorthCarolina': 'NC','Florida': 'FL','NorthDakota': 'ND','Georgia': 'GA','Ohio': 'OH','Hawaii': 'HI','Oklahoma': 'OK','Idaho': 'ID','Oregon': 'OR','Illinois': 'IL','Pennsylvania': 'PA','Indiana': 'IN','RhodeIsland': 'RI','Iowa': 'IA','SouthCarolina': 'SC','Kansas': 'KS','SouthDakota': 'SD','Kentucky': 'KY','Tennessee': 'TN','Louisiana': 'LA','Texas': 'TX','Maine': 'ME','Utah': 'UT','Maryland': 'MD','Vermont': 'VT','Massachusetts': 'MA','Virginia': 'VA','Michigan': 'MI','Washington': 'WA','Minnesota': 'MN','WestVirginia': 'WV','Mississippi': 'MS','Wisconsin': 'WI','Missouri': 'MO','Wyoming': 'WY'}

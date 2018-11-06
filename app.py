@@ -29,16 +29,16 @@ import heapq
 from bokeh.models import LogColorMapper, LogTicker, ColorBar
 palette=['#ff0000','#ff1a1a','#ff3333','#ff4d4d','#ff6666','#ff8080','#ff9999','#ffb3b3','#ffcccc','#ffe6e6','#bfbfbf','#e6e6ff','#ccccff','#b3b3ff','#9999ff','#8080ff','#6666ff','#4d4dff','#3333ff','#1a1aff','#0000ff']
 
-import bokeh
-bokeh.sampledata.download()
 app = Flask(__name__)
 
-def plot(location, predictions,state_name):
-	from bokeh.sampledata.us_counties import data as counties
-	counties = {code: county for code, county in counties.items() if county["state"] in [state_name]}
+def plot(location, predictions,state_name, state_id):
+	import us_counties as counties
+	county_data=counties._read_data()
+	counties = {code: county for code, county in county_data.items() if county["state"] in [state_name]}
 	county_xs = [county["lons"] for county in counties.values()]
 	county_ys = [county["lats"] for county in counties.values()]
 	county_names = [county['name'] for county in counties.values()]#Make sure names match with data
+	print(len(counties))
 	print(county_names)
 	color_mapper = LinearColorMapper(palette=palette,low=25, high=75)
 	data=dict(x=county_xs,y=county_ys,name=county_names,rate=predictions,)
@@ -165,13 +165,13 @@ def analysis(issue, state, county):
 	#heapq.heappush(h, (np.mean(scoresKNN),'KNN'))
 	heapq.heappush(h, (np.mean(scoresRFR),'RFR'))
 
-	print('GLR:',CV_GLR, np.mean(CV_GLR), GLR_R2, GLR.coef_)
-	print('Lasso: ',CV_LLR, np.mean(CV_LLR), LLR_R2, LLR.coef_)
-	print('RFR: ', scoresRFR, np.mean(scoresRFR), RFR.feature_importances_)
+	#print('GLR:',CV_GLR, np.mean(CV_GLR), GLR_R2, GLR.coef_)
+	#print('Lasso: ',CV_LLR, np.mean(CV_LLR), LLR_R2, LLR.coef_)
+	#print('RFR: ', scoresRFR, np.mean(scoresRFR), RFR.feature_importances_)
 
 	best_model=heapq.nlargest(1,h)
 	model_code=best_model[0][1]
-	print(model_code)
+	#print(model_code)
 
 	from bokeh.sampledata.us_counties import data as counties
 	statename_to_abbr = {'District of Columbia': 'DC','Alabama': 'AL','Montana': 'MT','Alaska': 'AK','Nebraska': 'NE','Arizona': 'AZ','Nevada': 'NV','Arkansas': 'AR','NewHampshire': 'NH','California': 'CA','NewJersey': 'NJ','Colorado': 'CO','NewMexico': 'NM','Connecticut': 'CT','NewYork': 'NY','Delaware': 'DE','NorthCarolina': 'NC','Florida': 'FL','NorthDakota': 'ND','Georgia': 'GA','Ohio': 'OH','Hawaii': 'HI','Oklahoma': 'OK','Idaho': 'ID','Oregon': 'OR','Illinois': 'IL','Pennsylvania': 'PA','Indiana': 'IN','RhodeIsland': 'RI','Iowa': 'IA','SouthCarolina': 'SC','Kansas': 'KS','SouthDakota': 'SD','Kentucky': 'KY','Tennessee': 'TN','Louisiana': 'LA','Texas': 'TX','Maine': 'ME','Utah': 'UT','Maryland': 'MD','Vermont': 'VT','Massachusetts': 'MA','Virginia': 'VA','Michigan': 'MI','Washington': 'WA','Minnesota': 'MN','WestVirginia': 'WV','Mississippi': 'MS','Wisconsin': 'WI','Missouri': 'MO','Wyoming': 'WY'}
@@ -183,9 +183,9 @@ def analysis(issue, state, county):
 		if i[0]==state_id:#Need to add 2-AK, 11-DC (no data),15 HI - Maui, 51, 53 WA need data
 			name=counties[i]['detailed name'].split(',')
 			if state_id == 51:
-				print(name[0])
+				#print(name[0])
 				name[0]=name[0].replace(' ','').replace('County','').replace('city','')
-				print(name[0])
+				#print(name[0])
 			else:
 				name[0]=name[0].replace(' ','').replace('County','').replace('Parish','')
 			name[1]=name[1].replace(' ','')
@@ -200,7 +200,7 @@ def analysis(issue, state, county):
 	predictions=[];lrr_predictions=[]
 	state_name=locations[0][:2].lower()
 	for place in locations:
-		print(place)
+		#print(place)
 		PredictX=county_lookup[county_lookup['STATE_COUNTY']==place]
 		PredictX=PredictX.ix[:, ['clinton_margin','PER_CAPITA_INCOME','UNINSURED_RATE','SOME_COLLEGE','AFAMERPER','WHITESPER','ASIANPER','HISPANICPER','PERSENIORS','POVERTY_RATE','INCINEQUALITY','UNEMP_RATE','RURAL_POP','CITIZENS']]
 		#model_code='LLR'
@@ -208,8 +208,8 @@ def analysis(issue, state, county):
 		elif model_code=='LLR': GLR_predict=LLR.predict(PredictX)*100.0
 		elif model_code=='RFR': GLR_predict=RFR.predict(PredictX)*100.0
 		predictions.append(round(GLR_predict[0]))
-	print(locations, predictions)
-	script, div=plot(locations, predictions, state_name)
+	#print(locations, predictions)
+	script, div=plot(locations, predictions, state_name, state_id)
 	script_coor, div_corr=plot_corr(pcc)
 
 	return pcc, scc, pcc_p, scc_p, GLR_R2, GLR_predict[0]*100.0, PredictX.iloc[0,0]*100.0, PredictX.iloc[0,1]*max_income, PredictX.iloc[0,2], PredictX.iloc[0,3], N, script, div, script_coor, div_corr
