@@ -38,8 +38,6 @@ def plot(location, predictions,state_name, state_id):
 	county_xs = [county["lons"] for county in counties.values()]
 	county_ys = [county["lats"] for county in counties.values()]
 	county_names = [county['name'] for county in counties.values()]#Make sure names match with data
-	print(len(counties))
-	print(county_names)
 	color_mapper = LinearColorMapper(palette=palette,low=25, high=75)
 	data=dict(x=county_xs,y=county_ys,name=county_names,rate=predictions,)
 	TOOLS = "pan,wheel_zoom,reset,hover,save"
@@ -150,7 +148,6 @@ def analysis(issue, state, county):
 
 	best_model=heapq.nlargest(1,h)
 	model_code=best_model[0][1]
-	#print(model_code)
 
 	import us_counties as counties
 	counties=counties._read_data()
