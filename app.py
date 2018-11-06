@@ -29,12 +29,11 @@ import heapq
 from bokeh.models import LogColorMapper, LogTicker, ColorBar
 palette=['#ff0000','#ff1a1a','#ff3333','#ff4d4d','#ff6666','#ff8080','#ff9999','#ffb3b3','#ffcccc','#ffe6e6','#bfbfbf','#e6e6ff','#ccccff','#b3b3ff','#9999ff','#8080ff','#6666ff','#4d4dff','#3333ff','#1a1aff','#0000ff']
 
-bokeh.sampledata.download()
-from bokeh.sampledata.us_counties import data as counties
 
 app = Flask(__name__)
 
 def plot(location, predictions,state_name):
+	from bokeh.sampledata.us_counties import data as counties
 	counties = {code: county for code, county in counties.items() if county["state"] in [state_name]}
 	county_xs = [county["lons"] for county in counties.values()]
 	county_ys = [county["lats"] for county in counties.values()]
@@ -133,31 +132,10 @@ def analysis(issue, state, county):
 
 	mod1=GLR.predict(data_train)
 
-	LRR = Ridge(alpha=0.1)
-	LRR.fit(data_train, y_train)
-	LRR_R2=LRR.score(data_train, y_train)
-	CV_LRR = cross_val_score(LRR, data_train, y_train, cv=2)
-	mod2=LRR.predict(data_train)
-
 	LLR = Lasso(alpha=0.0005)
 	LLR.fit(data_train, y_train)
 	LLR_R2=LLR.score(data_train, y_train)
 	CV_LLR = cross_val_score(LLR, data_train, y_train, cv=2)
-
-	ELN = ElasticNet(alpha=0.0001)
-	ELN.fit(data_train, y_train)
-	ELN_R2=ELN.score(data_train, y_train)
-	CV_ELN = cross_val_score(ELN, data_train, y_train, cv=2)
-
-	BRR = BayesianRidge(alpha_1=0.1,alpha_2=0.1)
-	BRR.fit(data_train, y_train)
-	BRR_R2=BRR.score(data_train, y_train)
-	CV_BRR = cross_val_score(BRR, data_train, y_train, cv=2)
-
-	KNN = neighbors.KNeighborsRegressor(n_neighbors=10)
-	KNN.fit(data_train, y_train)
-	KNN_R2=KNN.score(data_train, y_train)
-	scoresKNN = cross_val_score(KNN, data_train, y_train, cv=2)
 
 	RFR = RandomForestRegressor(n_estimators=500, max_depth=12, n_jobs=1)
 	RFR.fit(data_train, y_train)
@@ -187,11 +165,7 @@ def analysis(issue, state, county):
 	heapq.heappush(h, (np.mean(scoresRFR),'RFR'))
 
 	print('GLR:',CV_GLR, np.mean(CV_GLR), GLR_R2, GLR.coef_)
-	print('Ridge: ',CV_LRR, np.mean(CV_LRR), LRR_R2, LRR.coef_)
 	print('Lasso: ',CV_LLR, np.mean(CV_LLR), LLR_R2, LLR.coef_)
-	print('ELN: ',CV_ELN, np.mean(CV_ELN), ELN_R2, ELN.coef_)
-	print('BRR: ',CV_BRR, np.mean(CV_BRR), BRR_R2, BRR.coef_)
-	print('KNN: ', scoresKNN, np.mean(scoresKNN), KNN_R2)
 	print('RFR: ', scoresRFR, np.mean(scoresRFR), RFR.feature_importances_)
 
 	best_model=heapq.nlargest(1,h)
@@ -230,11 +204,7 @@ def analysis(issue, state, county):
 		PredictX=PredictX.ix[:, ['clinton_margin','PER_CAPITA_INCOME','UNINSURED_RATE','SOME_COLLEGE','AFAMERPER','WHITESPER','ASIANPER','HISPANICPER','PERSENIORS','POVERTY_RATE','INCINEQUALITY','UNEMP_RATE','RURAL_POP','CITIZENS']]
 		#model_code='LLR'
 		if model_code=='GLR': GLR_predict=GLR.predict(PredictX)*100.0
-		elif model_code=='LRR': GLR_predict=LRR.predict(PredictX)*100.0
 		elif model_code=='LLR': GLR_predict=LLR.predict(PredictX)*100.0
-		elif model_code=='ELN': GLR_predict=ELN.predict(PredictX)*100.0
-		elif model_code=='BRR': GLR_predict=BRR.predict(PredictX)*100.0
-		elif model_code=='KNN': GLR_predict=KNN.predict(PredictX)*100.0
 		elif model_code=='RFR': GLR_predict=RFR.predict(PredictX)*100.0
 		predictions.append(round(GLR_predict[0]))
 	print(locations, predictions)
