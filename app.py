@@ -143,44 +143,24 @@ def analysis(issue, state, county):
 	scoresRFR = cross_val_score(RFR, data_train, y_train, cv=2)
 	mod3=RFR.predict(data_train)
 
-
-	#MLPR=MLPRegressor(hidden_layer_sizes=(5,5), activation='relu', solver='adam', alpha=0.0001)
-	#MLPR.fit(data_train, y_train)
-	#scoresMLPR = cross_val_score(MLPR, data_train, y_train, cv=2)
-	#mod4=MLPR.predict(data_train)
-
-	#plt.scatter((mod3)/3.0,y_train,s=1)
-	#plt.scatter(mod3,y_train,s=1)
-	#plt.xlim(0,1)
-	#plt.ylim(0,1)
-	#plt.plot(np.arange(0,1,0.1),np.arange(0,1,0.1))
-	#plt.show()
-
 	h=[]
-	#heapq.heappush(h, (np.mean(CV_GLR),'GLR'))
-	#heapq.heappush(h, (np.mean(CV_LRR),'LRR'))
+	heapq.heappush(h, (np.mean(CV_GLR),'GLR'))
 	heapq.heappush(h, (np.mean(CV_LLR),'LLR'))
-	#heapq.heappush(h, (np.mean(CV_ELN),'ELN'))
-	#heapq.heappush(h, (np.mean(CV_BRR),'BRR'))
-	#heapq.heappush(h, (np.mean(scoresKNN),'KNN'))
 	heapq.heappush(h, (np.mean(scoresRFR),'RFR'))
-
-	#print('GLR:',CV_GLR, np.mean(CV_GLR), GLR_R2, GLR.coef_)
-	#print('Lasso: ',CV_LLR, np.mean(CV_LLR), LLR_R2, LLR.coef_)
-	#print('RFR: ', scoresRFR, np.mean(scoresRFR), RFR.feature_importances_)
 
 	best_model=heapq.nlargest(1,h)
 	model_code=best_model[0][1]
 	#print(model_code)
 
-	from bokeh.sampledata.us_counties import data as counties
+	import us_counties as counties
+	counties=counties._read_data()
 	statename_to_abbr = {'District of Columbia': 'DC','Alabama': 'AL','Montana': 'MT','Alaska': 'AK','Nebraska': 'NE','Arizona': 'AZ','Nevada': 'NV','Arkansas': 'AR','NewHampshire': 'NH','California': 'CA','NewJersey': 'NJ','Colorado': 'CO','NewMexico': 'NM','Connecticut': 'CT','NewYork': 'NY','Delaware': 'DE','NorthCarolina': 'NC','Florida': 'FL','NorthDakota': 'ND','Georgia': 'GA','Ohio': 'OH','Hawaii': 'HI','Oklahoma': 'OK','Idaho': 'ID','Oregon': 'OR','Illinois': 'IL','Pennsylvania': 'PA','Indiana': 'IN','RhodeIsland': 'RI','Iowa': 'IA','SouthCarolina': 'SC','Kansas': 'KS','SouthDakota': 'SD','Kentucky': 'KY','Tennessee': 'TN','Louisiana': 'LA','Texas': 'TX','Maine': 'ME','Utah': 'UT','Maryland': 'MD','Vermont': 'VT','Massachusetts': 'MA','Virginia': 'VA','Michigan': 'MI','Washington': 'WA','Minnesota': 'MN','WestVirginia': 'WV','Mississippi': 'MS','Wisconsin': 'WI','Missouri': 'MO','Wyoming': 'WY'}
 	keys=counties.keys()
 	locations=[]
 	state_id_abbr_conv={'AL':1,'AZ':4,'AR':5,'CA':6,'CO':8,'CT':9,'DE':10,'FL':12,'GA':13,'ID':16,'IL':17,'IN':18,'IA':19,'KS':20,'KY':21,'LA':22,'ME':23,'MD':24,'MA':25,'MI':26,'MN':27,'MS':28,'MO':29,'MT':30,'NE':31,'NV':32,'NH':33,'NJ':34,'NM':35,'NY':36,'NC':37,'ND':38,'OH':39,'OK':40,'OR':41,'PA':42,'RI':44,'SC':45,'SD':46,'TN':47,'TX':48,'UT':49,'VT':50,'VA':51,'WV':54,'WY':56,'WI':55,'WA':53}
 	state_id=state_id_abbr_conv[state]
 	for i in keys:
-		if i[0]==state_id:#Need to add 2-AK, 11-DC (no data),15 HI - Maui, 51, 53 WA need data
+		if i[0]==state_id:#Need to add 2-AK, 11-DC (no data),15 HI - Maui data
 			name=counties[i]['detailed name'].split(',')
 			if state_id == 51:
 				#print(name[0])
